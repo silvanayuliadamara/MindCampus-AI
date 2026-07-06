@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnosis | Burnout Diagnosis</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        body {
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+        }
+        
+        /* Custom radio button styling */
+        input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wizard-container glass-panel" style="width: 100%;">
+        
+        <!-- Header & Progress -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+            <a href="dashboard.html" style="color: var(--text-muted); text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                <i class="ph-bold ph-x"></i> Batalkan Sesi
+            </a>
+            <div style="font-size: 14px; color: var(--primary); font-weight: 500;">Pertanyaan 3 dari 12</div>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+
+        <!-- Question Area -->
+        <h2 class="question-title">Seberapa sering Anda merasa kosong dan kehabisan energi setelah mengerjakan tugas akhir/skripsi?</h2>
+        <p class="question-desc">Pilih intensitas yang paling menggambarkan kondisi Anda dalam 1 bulan terakhir.</p>
+
+        <!-- Options -->
+        <div class="options-group">
+            <label class="option-card">
+                <input type="radio" name="answer" value="0">
+                <span style="font-weight: 500;">Tidak Pernah</span>
+            </label>
+            <label class="option-card">
+                <input type="radio" name="answer" value="0.2">
+                <span style="font-weight: 500;">Jarang</span>
+            </label>
+            <label class="option-card">
+                <input type="radio" name="answer" value="0.4">
+                <span style="font-weight: 500;">Kadang-Kadang</span>
+            </label>
+            <label class="option-card selected">
+                <input type="radio" name="answer" value="0.6" checked>
+                <span style="font-weight: 500;">Sering</span>
+            </label>
+            <label class="option-card">
+                <input type="radio" name="answer" value="0.8">
+                <span style="font-weight: 500;">Sangat Sering / Selalu</span>
+            </label>
+        </div>
+
+        <!-- Navigation Footer -->
+        <div class="wizard-footer">
+            <button class="btn btn-secondary">
+                <i class="ph-bold ph-arrow-left"></i> Sebelumnya
+            </button>
+            <button class="btn btn-primary" onclick="window.location.href='dashboard.html'">
+                Selanjutnya <i class="ph-bold ph-arrow-right"></i>
+            </button>
+        </div>
+
+    </div>
+
+    <!-- Script sederhana untuk interaksi prototype -->
+    <script>
+        const cards = document.querySelectorAll('.option-card');
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                // Remove selected class from all
+                cards.forEach(c => c.classList.remove('selected'));
+                // Add to clicked
+                card.classList.add('selected');
+                card.querySelector('input').checked = true;
+            });
+        });
+    </script>
+</body>
+</html>
