@@ -38,10 +38,7 @@ class CertaintyFactorService
             $globalCfValues[] = $cfResult;
         }
 
-        // 2. Kombinasi CF secara berurutan (Sequential Combine)
-        $cfGlobalFinal = $this->combineCfArray($globalCfValues);
-        
-        // 3. Kombinasi CF per Dimensi (untuk analisis mendalam di laporan)
+        // 2. Kombinasi CF per Dimensi (Exhaustion, Cynicism, Inefficacy)
         $dimensionResults = [];
         $categories = SymptomCategory::all();
         
@@ -50,12 +47,16 @@ class CertaintyFactorService
             $dimensionResults[$category->name] = $this->combineCfArray($cfArray);
         }
 
-        // 4. Map ke Tingkat Burnout (Berdasarkan range min_cf & max_cf)
+        // 3. Hitung CF Global Akhir sebagai rata-rata dari nilai CF tiap dimensi
+        // Ini menghindari saturasi cepat (100% burnout) dan memberikan hasil yang jauh lebih bervariasi & valid secara psikologis
+        $cfGlobalFinal = count($dimensionResults) > 0 ? array_sum($dimensionResults) / count($dimensionResults) : 0.0;
+        
+        // 4. Map ke Tingkat Burnout (Berdasarkan min_cf)
         $burnoutLevel = BurnoutLevel::where('min_cf', '<=', $cfGlobalFinal)
-            ->where('max_cf', '>=', $cfGlobalFinal)
+            ->orderBy('min_cf', 'desc')
             ->first();
 
-        // Jika perhitungan meleset dari range (sangat jarang terjadi jika data seed benar)
+        // Fallback jika tidak ketemu
         if (!$burnoutLevel) {
             $burnoutLevel = BurnoutLevel::orderBy('min_cf', 'asc')->first();
         }

@@ -16,6 +16,7 @@
     
     --text-main: #2b3674;
     --text-muted: #a3aed1;
+    --text-dark: #2b3674;
     --border-color: #e9edf7;
     
     --danger: #ef4444;
@@ -30,6 +31,17 @@
     --shadow-soft: 0px 4px 16px rgba(43, 54, 116, 0.05);
     
     --transition: all 0.3s ease;
+}
+
+[data-theme="dark"] {
+    --bg-body: #0b0f19;
+    --bg-surface: #111827;
+    --text-main: #f3f4f6;
+    --text-muted: #9ca3af;
+    --text-dark: #f8fafc;
+    --border-color: #1f2937;
+    --primary-light: rgba(67, 97, 238, 0.15);
+    --shadow-soft: 0px 10px 30px rgba(0, 0, 0, 0.2);
 }
 
 * {

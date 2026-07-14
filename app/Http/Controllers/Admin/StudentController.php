@@ -14,7 +14,11 @@ class StudentController extends Controller
         // Get all users who have the role 'mahasiswa'
         $query = User::whereHas('role', function($q) {
             $q->where('name', 'mahasiswa');
-        })->with(['profile'])->withCount('diagnoses');
+        })->with(['profile'])
+          // Hanya hitung diagnosis yang diizinkan dibagikan (is_shared = true)
+          ->withCount(['diagnoses' => function($q) {
+              $q->where('is_shared', true);
+          }]);
 
         // Apply filters
         if ($search = $request->input('search')) {
@@ -47,7 +51,7 @@ class StudentController extends Controller
             }
         }
 
-        $students = $query->get();
+        $students = $query->paginate(10)->withQueryString();
 
         return view('admin.students.index', compact('students'));
     }
@@ -60,9 +64,20 @@ class StudentController extends Controller
         }
 
         $student->load(['profile']);
-        $diagnoses = Diagnosis::with('burnoutLevel')->where('user_id', $student->id)->orderBy('created_at', 'desc')->get();
 
-        return view('admin.students.show', compact('student', 'diagnoses'));
+        // Hanya tampilkan diagnosis yang diizinkan dibagikan (is_shared = true)
+        $diagnoses = Diagnosis::with('burnoutLevel')
+            ->where('user_id', $student->id)
+            ->where('is_shared', true)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Hitung total diagnosis (termasuk yang private) untuk referensi
+        $totalDiagnoses = Diagnosis::where('user_id', $student->id)->count();
+        $sharedCount = $diagnoses->count();
+        $privateCount = $totalDiagnoses - $sharedCount;
+
+        return view('admin.students.show', compact('student', 'diagnoses', 'totalDiagnoses', 'sharedCount', 'privateCount'));
     }
 
     public function destroy(User $student)

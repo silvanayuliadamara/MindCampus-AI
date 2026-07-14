@@ -13,6 +13,7 @@ class Diagnosis extends Model
         'user_id',
         'burnout_level_id',
         'cf_result',
+        'is_shared',
     ];
 
     public function user()

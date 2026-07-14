@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Serenity AI</title>
+    <title>Setel Ulang Password | Serenity AI</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
@@ -121,74 +121,75 @@
             margin-top: 6px;
             display: block;
         }
-
-        .demo-info {
-            margin-top: 28px;
-            padding: 16px;
-            background: rgba(13, 148, 136, 0.05);
-            border: 1px solid rgba(13, 148, 136, 0.12);
-            border-radius: 10px;
-            font-size: 12px;
-            color: #4b5563;
-            text-align: center;
-        }
-
-        .demo-info p { margin: 2px 0; }
-        .demo-info strong { color: #0d9488; }
     </style>
 </head>
 <body>
     <div class="login-card">
         <div class="brand">🧠 Serenity AI</div>
-        <h2>Selamat Datang Kembali</h2>
-        <p class="subtitle">Masuk untuk melanjutkan diagnosis Anda</p>
+        <h2>Setel Ulang Password</h2>
+        <p class="subtitle">Buat password baru yang aman untuk akun Anda.</p>
 
-        @if (session('status'))
-            <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); color: #065f46; padding: 14px; border-radius: 10px; font-size: 13px; margin-bottom: 20px; line-height: 1.5; text-align: center;">
-                {{ session('status') }}
-            </div>
-        @endif
-
-        <form method="POST" action="{{ route('login') }}">
+        <form method="POST" action="{{ route('password.update') }}">
             @csrf
 
+            <!-- Tampilkan email terkunci untuk konfirmasi -->
             <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" value="{{ old('email') }}" placeholder="nama@email.com" required autofocus>
-                @error('email') <span class="error">{{ $message }}</span> @enderror
+                <label>Email Pengguna</label>
+                <input type="email" value="{{ $email }}" disabled style="background: #f1f5f9; color: #64748b; cursor: not-allowed; border-color: #cbd5e1;">
             </div>
 
+            <!-- Password Baru -->
             <div class="form-group">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                    <label for="password" style="margin: 0;">Password</label>
-                    <a href="{{ route('password.request') }}" style="font-size: 12px; color: #0d9488; text-decoration: none; font-weight: 500;">Lupa password?</a>
-                </div>
+                <label for="password">Password Baru</label>
                 <div style="position: relative;">
-                    <input type="password" id="password" name="password" placeholder="••••••••" required style="padding-right: 48px;">
+                    <input type="password" id="password" name="password" placeholder="Min. 8 Karakter" required style="padding-right: 48px;" autofocus>
                     <button type="button" id="toggle-password" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #6b7280; padding: 4px; display: flex; align-items: center; justify-content: center; width: auto; box-shadow: none; margin: 0; outline: none;">
-                        <i class="ph ph-eye-slash" id="eye-icon" style="font-size: 20px;"></i>
+                        <i class="ph ph-eye-slash" id="eye-icon-pass" style="font-size: 20px;"></i>
+                    </button>
+                </div>
+                @error('password') <span class="error">{{ $message }}</span> @enderror
+            </div>
+
+            <!-- Konfirmasi Password Baru -->
+            <div class="form-group">
+                <label for="password_confirmation">Konfirmasi Password Baru</label>
+                <div style="position: relative;">
+                    <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Ulangi Password" required style="padding-right: 48px;">
+                    <button type="button" id="toggle-password-confirm" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #6b7280; padding: 4px; display: flex; align-items: center; justify-content: center; width: auto; box-shadow: none; margin: 0; outline: none;">
+                        <i class="ph ph-eye-slash" id="eye-icon-confirm" style="font-size: 20px;"></i>
                     </button>
                 </div>
             </div>
 
-            <button type="submit">Masuk</button>
-
-            <div style="text-align: center; margin-top: 20px; font-size: 13px; color: #4b5563;">
-                Belum punya akun? <a href="{{ route('register') }}" style="color: #0d9488; text-decoration: none; font-weight: 600;">Daftar Sekarang</a>
-            </div>
+            <button type="submit">Setel Ulang Password</button>
         </form>
     </div>
 
     <script>
+        // Toggle Password
         document.getElementById('toggle-password').addEventListener('click', function() {
             const passwordInput = document.getElementById('password');
-            const eyeIcon = document.getElementById('eye-icon');
+            const eyeIcon = document.getElementById('eye-icon-pass');
             
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
                 eyeIcon.className = 'ph ph-eye';
             } else {
                 passwordInput.type = 'password';
+                eyeIcon.className = 'ph ph-eye-slash';
+            }
+        });
+
+        // Toggle Confirm Password
+        document.getElementById('toggle-password-confirm').addEventListener('click', function() {
+            const confirmInput = document.getElementById('password_confirmation');
+            const eyeIcon = document.getElementById('eye-icon-confirm');
+            
+            if (confirmInput.type === 'password') {
+                confirmInput.type = 'text';
+                eyeIcon.className = 'ph ph-eye';
+            } else {
+                confirmInput.type = 'password';
                 eyeIcon.className = 'ph ph-eye-slash';
             }
         });

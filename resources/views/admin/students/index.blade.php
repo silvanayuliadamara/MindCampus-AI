@@ -22,7 +22,7 @@
                     <th style="font-size: 12px; color: var(--text-muted); text-transform: uppercase;">Nama Lengkap</th>
                     <th style="font-size: 12px; color: var(--text-muted); text-transform: uppercase;">Email</th>
                     <th style="font-size: 12px; color: var(--text-muted); text-transform: uppercase;">Program Studi</th>
-                    <th style="font-size: 12px; color: var(--text-muted); text-transform: uppercase;">Total Tes</th>
+                    <th style="font-size: 12px; color: var(--text-muted); text-transform: uppercase;">Tes Dibagikan</th>
                     <th style="font-size: 12px; color: var(--text-muted); text-transform: uppercase; text-align: right;">Aksi</th>
                 </tr>
             </thead>
@@ -48,7 +48,11 @@
                             @endif
                         </td>
                         <td style="font-weight: 800; color: var(--primary);">
-                            {{ $student->diagnoses_count }} Kali
+                            @if($student->diagnoses_count > 0)
+                                {{ $student->diagnoses_count }} Kali
+                            @else
+                                <span style="color: var(--text-muted); font-weight: 600;">—</span>
+                            @endif
                         </td>
                         <td style="text-align: right;">
                             <a href="{{ route('admin.students.show', $student->id) }}" class="btn btn-sm" style="background: rgba(9, 132, 227, 0.1); color: #0984e3; border-radius: 8px;">
@@ -70,6 +74,16 @@
                 @endforelse
             </tbody>
         </table>
+    </div>
+
+    <!-- Paging Navigation -->
+    <div class="mt-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div style="font-size: 13px; color: var(--text-muted); font-weight: 600;">
+            Menampilkan {{ $students->firstItem() ?? 0 }} - {{ $students->lastItem() ?? 0 }} dari {{ $students->total() }} Mahasiswa
+        </div>
+        <div class="neo-pagination">
+            {{ $students->links('pagination::bootstrap-5') }}
+        </div>
     </div>
 </div>
 @endsection

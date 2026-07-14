@@ -7,7 +7,9 @@ use App\Models\Symptom;
 use App\Models\BurnoutLevel;
 use App\Models\Diagnosis;
 use App\Models\DiagnosisDetail;
+use App\Models\SymptomCategory;
 use Illuminate\Support\Facades\Auth;
+use App\Services\CertaintyFactorService;
 
 class DiagnosisController extends Controller
 {
@@ -32,29 +34,25 @@ class DiagnosisController extends Controller
         ]);
 
         $symptomsInput = $request->input('symptoms');
-        $allSymptoms = Symptom::whereIn('id', array_keys($symptomsInput))->get()->keyBy('id');
 
-        $cfCombine = 0;
+        // Gunakan CertaintyFactorService untuk perhitungan yang lebih akurat
+        $cfService = new CertaintyFactorService();
+        $result = $cfService->calculate($symptomsInput);
+
+        $cfGlobalFinal = $result['cf_final'];
+        $burnoutLevel = $result['burnout_level'];
+        $dimensions = $result['dimensions'];
+
+        // Hitung detail per gejala
+        $allSymptoms = Symptom::whereIn('id', array_keys($symptomsInput))->get()->keyBy('id');
         $details = [];
 
         foreach ($symptomsInput as $symptomId => $cfUser) {
             $symptom = $allSymptoms->get($symptomId);
             if (!$symptom) continue;
 
-            // CF Pakar sudah tersimpan di database sebagai cf_expert (MB - MD)
-            $cfExpert = $symptom->cf_expert;
+            $cfResult = (float) $cfUser * (float) $symptom->cf_expert;
 
-            // CF Gejala (CF H,E) = CF User * CF Expert
-            $cfResult = $cfUser * $cfExpert;
-
-            // Kombinasikan CF dengan rule CF combine (untuk kasus positif)
-            if ($cfCombine == 0) {
-                $cfCombine = $cfResult;
-            } else {
-                $cfCombine = $cfCombine + ($cfResult * (1 - $cfCombine));
-            }
-
-            // Siapkan data detail untuk disimpan
             $details[] = [
                 'symptom_id' => $symptomId,
                 'cf_user' => $cfUser,
@@ -62,21 +60,12 @@ class DiagnosisController extends Controller
             ];
         }
 
-        // Tentukan Burnout Level
-        $burnoutLevel = BurnoutLevel::where('min_cf', '<=', $cfCombine)
-            ->orderBy('min_cf', 'desc')
-            ->first();
-
-        if (!$burnoutLevel) {
-            // Default jika tidak ketemu (kasus CF sangat kecil / 0)
-            $burnoutLevel = BurnoutLevel::where('code', 'B001')->first();
-        }
-
         // Simpan ke database
         $diagnosis = Diagnosis::create([
             'user_id' => Auth::id(),
             'burnout_level_id' => $burnoutLevel->id,
-            'cf_result' => $cfCombine,
+            'cf_result' => $cfGlobalFinal,
+            'is_shared' => $request->has('is_shared'),
         ]);
 
         // Simpan details
@@ -99,7 +88,10 @@ class DiagnosisController extends Controller
             abort(403, 'Unauthorized access.');
         }
 
-        return view('user.diagnosis.result', compact('diagnosis'));
+        // Hitung ulang dimensi dari detail yang tersimpan untuk tampilan
+        $dimensions = $this->calculateDimensions($diagnosis);
+
+        return view('user.diagnosis.result', compact('diagnosis', 'dimensions'));
     }
 
     /**
@@ -113,5 +105,48 @@ class DiagnosisController extends Controller
             ->get();
             
         return view('user.diagnosis.history', compact('diagnoses'));
+    }
+
+    /**
+     * Hitung CF per dimensi (kategori) dari detail diagnosis yang tersimpan.
+     */
+    private function calculateDimensions(Diagnosis $diagnosis): array
+    {
+        $categories = SymptomCategory::all();
+        $dimensionalCf = [];
+
+        foreach ($diagnosis->details as $detail) {
+            if ($detail->symptom) {
+                $catId = $detail->symptom->category_id;
+                if (!isset($dimensionalCf[$catId])) {
+                    $dimensionalCf[$catId] = [];
+                }
+                $dimensionalCf[$catId][] = $detail->cf_result;
+            }
+        }
+
+        $results = [];
+        foreach ($categories as $category) {
+            $cfArray = $dimensionalCf[$category->id] ?? [0];
+            $results[$category->description ?: $category->name] = $this->combineCfArray($cfArray);
+        }
+
+        return $results;
+    }
+
+    /**
+     * Kombinasi CF array (same formula as CertaintyFactorService).
+     */
+    private function combineCfArray(array $cfValues): float
+    {
+        if (count($cfValues) === 0) return 0.0;
+        if (count($cfValues) === 1) return $cfValues[0];
+
+        $cfCombine = $cfValues[0];
+        for ($i = 1; $i < count($cfValues); $i++) {
+            $cfCombine = $cfCombine + ($cfValues[$i] * (1 - $cfCombine));
+        }
+
+        return round($cfCombine, 4);
     }
 }

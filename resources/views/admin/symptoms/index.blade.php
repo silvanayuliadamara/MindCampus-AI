@@ -67,5 +67,15 @@
             </tbody>
         </table>
     </div>
+    
+    <!-- Paging Navigation -->
+    <div class="mt-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div style="font-size: 13px; color: var(--text-muted); font-weight: 600;">
+            Menampilkan {{ $symptoms->firstItem() ?? 0 }} - {{ $symptoms->lastItem() ?? 0 }} dari {{ $symptoms->total() }} Gejala
+        </div>
+        <div class="neo-pagination">
+            {{ $symptoms->links('pagination::bootstrap-5') }}
+        </div>
+    </div>
 </div>
 @endsection

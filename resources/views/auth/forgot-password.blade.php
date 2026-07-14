@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Serenity AI</title>
+    <title>Lupa Password | Serenity AI</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
@@ -59,7 +59,8 @@
             text-align: center;
             font-size: 13px;
             color: #6b7280;
-            margin-bottom: 32px;
+            margin-bottom: 24px;
+            line-height: 1.5;
         }
 
         .form-group { margin-bottom: 20px; }
@@ -122,34 +123,43 @@
             display: block;
         }
 
-        .demo-info {
-            margin-top: 28px;
-            padding: 16px;
-            background: rgba(13, 148, 136, 0.05);
-            border: 1px solid rgba(13, 148, 136, 0.12);
+        .alert-success {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: #065f46;
+            padding: 14px;
             border-radius: 10px;
-            font-size: 12px;
-            color: #4b5563;
-            text-align: center;
+            font-size: 13px;
+            margin-bottom: 20px;
+            line-height: 1.5;
         }
 
-        .demo-info p { margin: 2px 0; }
-        .demo-info strong { color: #0d9488; }
+        .alert-debug {
+            background: rgba(217, 119, 6, 0.08);
+            border: 1px dashed rgba(217, 119, 6, 0.2);
+            color: #92400e;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 12px;
+            margin-bottom: 20px;
+            text-align: left;
+            word-break: break-all;
+        }
     </style>
 </head>
 <body>
     <div class="login-card">
         <div class="brand">🧠 Serenity AI</div>
-        <h2>Selamat Datang Kembali</h2>
-        <p class="subtitle">Masuk untuk melanjutkan diagnosis Anda</p>
+        <h2>Lupa Password</h2>
+        <p class="subtitle">Masukkan alamat email Anda. Kami akan mengirimkan kode OTP 6 digit untuk proses pemulihan kata sandi.</p>
 
         @if (session('status'))
-            <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); color: #065f46; padding: 14px; border-radius: 10px; font-size: 13px; margin-bottom: 20px; line-height: 1.5; text-align: center;">
+            <div class="alert-success">
                 {{ session('status') }}
             </div>
         @endif
 
-        <form method="POST" action="{{ route('login') }}">
+        <form method="POST" action="{{ route('password.otp.send') }}">
             @csrf
 
             <div class="form-group">
@@ -158,40 +168,12 @@
                 @error('email') <span class="error">{{ $message }}</span> @enderror
             </div>
 
-            <div class="form-group">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                    <label for="password" style="margin: 0;">Password</label>
-                    <a href="{{ route('password.request') }}" style="font-size: 12px; color: #0d9488; text-decoration: none; font-weight: 500;">Lupa password?</a>
-                </div>
-                <div style="position: relative;">
-                    <input type="password" id="password" name="password" placeholder="••••••••" required style="padding-right: 48px;">
-                    <button type="button" id="toggle-password" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #6b7280; padding: 4px; display: flex; align-items: center; justify-content: center; width: auto; box-shadow: none; margin: 0; outline: none;">
-                        <i class="ph ph-eye-slash" id="eye-icon" style="font-size: 20px;"></i>
-                    </button>
-                </div>
-            </div>
+            <button type="submit">Kirim Kode OTP</button>
 
-            <button type="submit">Masuk</button>
-
-            <div style="text-align: center; margin-top: 20px; font-size: 13px; color: #4b5563;">
-                Belum punya akun? <a href="{{ route('register') }}" style="color: #0d9488; text-decoration: none; font-weight: 600;">Daftar Sekarang</a>
+            <div style="text-align: center; margin-top: 24px; font-size: 13px; color: #4b5563;">
+                Kembali ke <a href="{{ route('login') }}" style="color: #0d9488; text-decoration: none; font-weight: 600;">Halaman Masuk</a>
             </div>
         </form>
     </div>
-
-    <script>
-        document.getElementById('toggle-password').addEventListener('click', function() {
-            const passwordInput = document.getElementById('password');
-            const eyeIcon = document.getElementById('eye-icon');
-            
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                eyeIcon.className = 'ph ph-eye';
-            } else {
-                passwordInput.type = 'password';
-                eyeIcon.className = 'ph ph-eye-slash';
-            }
-        });
-    </script>
 </body>
 </html>
