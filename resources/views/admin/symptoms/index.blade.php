@@ -2,16 +2,16 @@
 @section('title', 'Kelola Gejala')
 
 @section('content')
-<div class="neo-card mb-4" style="padding: 24px; border-radius: 20px; border: none;">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h3 style="font-weight: 800; color: var(--text-dark); margin: 0;">Data Gejala Pakar</h3>
-            <p style="font-size: 14px; color: var(--text-muted); margin: 0; margin-top: 4px;">Kelola basis pengetahuan (gejala) dan nilai probabilitas pakar.</p>
-        </div>
-        <a href="{{ route('admin.symptoms.create') }}" class="btn btn-primary" style="border-radius: 10px; font-weight: 700; padding: 10px 20px;">
-            <i class="ph-bold ph-plus"></i> Tambah Gejala
-        </a>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex align-items-center gap-3">
+        <h3 style="font-weight: 800; color: var(--text-main, #2b3674); margin: 0; font-size: 24px; letter-spacing: -0.5px;">Data Gejala</h3>
     </div>
+    <a href="{{ route('admin.symptoms.create') }}" class="btn btn-primary" style="border-radius: 10px; font-weight: 700; padding: 10px 20px; box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);">
+        <i class="ph-bold ph-plus"></i> Tambah Gejala
+    </a>
+</div>
+
+<div class="neo-card mb-4" style="padding: 24px; border-radius: 20px; border: none;">
 
     @if(session('success'))
         <div class="alert alert-success" style="border-radius: 12px; font-weight: 600;">

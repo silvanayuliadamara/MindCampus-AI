@@ -634,7 +634,8 @@ input:checked + .switch-slider::before {
         padding: 24px 20px;
     }
     
-    .app-container.show-sidebar .sidebar-dark {
+    .app-container.show-sidebar .sidebar-dark,
+    .app-container.show-icon-only .sidebar-dark {
         display: flex;
         position: absolute;
         height: 100%;
@@ -649,7 +650,8 @@ input:checked + .switch-slider::before {
         z-index: 45;
     }
     
-    .app-container.show-sidebar .main-content::before {
+    .app-container.show-sidebar .main-content::before,
+    .app-container.show-icon-only .main-content::before {
         content: '';
         position: absolute;
         top: 0;

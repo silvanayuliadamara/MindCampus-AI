@@ -2,8 +2,14 @@
 @section('title', 'Tambah Gejala')
 
 @section('content')
-<div class="neo-card" style="padding: 32px; border-radius: 20px; border: none; max-width: 800px;">
-    <h3 style="font-weight: 800; color: var(--text-dark); margin-bottom: 24px;">Tambah Gejala Baru</h3>
+<div class="d-flex align-items-center gap-3 mb-4">
+    <a href="{{ route('admin.symptoms.index') }}" class="btn btn-sm btn-light" style="border-radius: 10px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); background: white; border: 1px solid var(--border-color, #e9edf7);">
+        <i class="ph-bold ph-arrow-left" style="font-size: 18px;"></i>
+    </a>
+    <h3 style="font-weight: 800; color: var(--text-main, #2b3674); margin: 0; font-size: 24px; letter-spacing: -0.5px;">Tambah Gejala Baru</h3>
+</div>
+
+<div class="neo-card" style="padding: 32px; border-radius: 20px; border: none;">
 
     @if ($errors->any())
         <div class="alert alert-danger" style="border-radius: 12px;">

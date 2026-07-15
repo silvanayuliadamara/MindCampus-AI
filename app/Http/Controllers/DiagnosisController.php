@@ -83,8 +83,14 @@ class DiagnosisController extends Controller
     {
         $diagnosis = Diagnosis::with(['burnoutLevel', 'details.symptom'])->findOrFail($id);
         
-        // Pastikan user hanya bisa melihat hasilnya sendiri
-        if ($diagnosis->user_id !== Auth::id()) {
+        $user = Auth::user();
+        
+        // Pastikan user hanya bisa melihat hasilnya sendiri, 
+        // kecuali admin dan diagnosis tersebut diizinkan untuk dibagikan (is_shared = true).
+        $isOwner = $diagnosis->user_id === $user->id;
+        $isAdminAllowed = $user->role && $user->role->name === 'admin' && $diagnosis->is_shared;
+
+        if (!$isOwner && !$isAdminAllowed) {
             abort(403, 'Unauthorized access.');
         }
 

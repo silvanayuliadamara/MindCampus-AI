@@ -48,22 +48,14 @@
         <div style="position: relative; min-height: 250px;">
             @foreach($symptoms as $index => $symptom)
             <div class="question-step animated-card" data-step="{{ $index }}" style="{{ $index === 0 ? '' : 'display: none;' }}">
-                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 18px;">
-                    <div style="font-size: 10px; font-weight: 800; color: var(--text-secondary); background: rgba(255,255,255,0.05); [data-theme='light'] & { background: rgba(0,0,0,0.04); } padding: 4px 10px; border-radius: 50px; text-transform: uppercase;">
-                        Kode Gejala: {{ $symptom->code }}
-                    </div>
-                    <span style="width: 4px; height: 4px; background-color: var(--text-muted); border-radius: 50%;"></span>
-                    <div style="font-size: 10px; font-weight: 800; color: var(--text-secondary); background: rgba(20, 184, 166, 0.1); padding: 4px 10px; border-radius: 50px; text-transform: uppercase;">
-                        Kategori: {{ $symptom->category->name }}
-                    </div>
-                </div>
+
 
                 <h3 style="font-size: 18px; color: var(--text-dark); margin-bottom: 28px; font-weight: 700; line-height: 1.6; letter-spacing: -0.3px;">
                     {{ $symptom->question }}
                 </h3>
                 
                 <!-- Option Radio Grid -->
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px;">
+                <div class="row g-3">
                     @php
                         $options = [
                             ['label' => 'Hampir Selalu', 'value' => 1.0, 'emoji' => '😰'],
@@ -76,13 +68,15 @@
                     @endphp
 
                     @foreach($options as $opt)
-                    <label class="option-card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; padding: 14px 10px; text-align: center; cursor: pointer; height: 100%; min-height: 75px; gap: 6px;">
-                        <input type="radio" name="symptoms[{{ $symptom->id }}]" value="{{ $opt['value'] }}" required style="position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0;">
-                        <span style="font-size: 18px; line-height: 1;">{{ $opt['emoji'] }}</span>
-                        <div style="font-weight: 600; font-size: 12px; color: var(--text-secondary); transition: all 0.3s; line-height: 1.2;">
-                            {{ $opt['label'] }}
-                        </div>
-                    </label>
+                    <div class="col-6 col-md-4">
+                        <label class="option-card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; padding: 14px 10px; text-align: center; cursor: pointer; height: 100%; min-height: 75px; gap: 6px;">
+                            <input type="radio" name="symptoms[{{ $symptom->id }}]" value="{{ $opt['value'] }}" style="position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0;">
+                            <span style="font-size: 18px; line-height: 1;">{{ $opt['emoji'] }}</span>
+                            <div style="font-weight: 600; font-size: 12px; color: var(--text-secondary); transition: all 0.3s; line-height: 1.2;">
+                                {{ $opt['label'] }}
+                            </div>
+                        </label>
+                    </div>
                     @endforeach
                 </div>
             </div>
@@ -252,6 +246,15 @@
                     }
                 });
             });
+        });
+        
+        // Form submission validation for the last step
+        const form = document.getElementById('wizard-form');
+        form.addEventListener('submit', function(e) {
+            if (!validateCurrentStep()) {
+                e.preventDefault();
+                alert('Pilih salah satu opsi frekuensi terlebih dahulu sebelum melihat hasil!');
+            }
         });
         
         // Set initial state

@@ -100,18 +100,33 @@ p { line-height: 1.6; }
 }
 
 .sidebar.collapsed .brand {
+    padding: 0;
+}
+
+.sidebar.collapsed .nav-links {
     padding: 0 16px;
 }
 
 .sidebar.collapsed .nav-links li a,
 .sidebar.collapsed .btn-logout button {
     justify-content: center;
-    padding: 14px;
+    padding: 12px !important;
+    margin: 0 !important;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px !important;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar.collapsed .btn-logout {
+    padding: 0 16px;
 }
 
 .sidebar.collapsed #logout-icon {
     display: inline-block !important;
     font-size: 20px;
+    margin: 0 !important;
 }
 
 .sidebar .brand {
@@ -246,13 +261,16 @@ p { line-height: 1.6; }
 
 /* Topbar */
 .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 90;
     height: 80px;
     background: var(--bg-surface);
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 40px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03); /* Slightly stronger shadow for sticky depth */
 }
 
 .topbar-left {

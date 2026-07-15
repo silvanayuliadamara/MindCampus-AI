@@ -49,6 +49,7 @@
     .challenge-checkbox {
         width: 20px;
         height: 20px;
+        flex-shrink: 0;
         accent-color: var(--accent);
         cursor: pointer;
     }
@@ -126,7 +127,7 @@
                 <h4 style="font-size: 16px; font-weight: 800; color: var(--text-dark); margin: 0; margin-bottom: 6px;">Mood Check-In</h4>
                 <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 20px;">Bagaimana perasaanmu sekarang?</p>
                 
-                <div style="display: flex; justify-content: space-between; gap: 8px; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
                     <button class="mood-btn" onclick="checkInMood('😊', 'Hebat! Pertahankan energi positifmu untuk menyelesaikan tugas hari ini! 🚀')" title="Happy">😊</button>
                     <button class="mood-btn" onclick="checkInMood('😴', 'Ngerasa capek ya? Tarik napas, regangkan badan, dan istirahat 15 menit yuk. ☕')" title="Tired">😴</button>
                     <button class="mood-btn" onclick="checkInMood('🤯', 'Stres menumpuk? Tenang, kerjakan satu per satu secara perlahan. Kamu pasti bisa! 💪')" title="Stressed">🤯</button>

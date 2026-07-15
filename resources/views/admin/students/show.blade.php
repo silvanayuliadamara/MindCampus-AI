@@ -2,10 +2,17 @@
 @section('title', 'Detail Mahasiswa')
 
 @section('content')
-<div class="row g-4">
+<div class="mb-4">
+    <a href="{{ route('admin.students.index') }}" style="display: inline-flex; align-items: center; gap: 8px; color: var(--text-muted); text-decoration: none; font-weight: 600; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-muted)'">
+        <i class="ph-bold ph-arrow-left" style="font-size: 18px;"></i>
+        Kembali ke Daftar Mahasiswa
+    </a>
+</div>
+<div class="neo-card" style="padding: 32px; border-radius: 20px; border: none;">
+    <div class="row g-4">
     <!-- Profil Mahasiswa -->
-    <div class="col-lg-4">
-        <div class="neo-card" style="padding: 32px; border-radius: 20px; border: none; text-align: center;">
+    <div class="col-lg-4" style="border-right: 1px dashed rgba(0,0,0,0.1);">
+        <div style="text-align: center;">
             <div style="width: 100px; height: 100px; border-radius: 25px; background: rgba(9, 132, 227, 0.1); color: #0984e3; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 40px; margin: 0 auto 20px;">
                 {{ strtoupper(substr($student->name, 0, 1)) }}
             </div>
@@ -40,15 +47,12 @@
                 </div>
             </div>
 
-            <div class="mt-4">
-                <a href="{{ route('admin.students.index') }}" class="btn btn-secondary w-100" style="border-radius: 12px; font-weight: 700; padding: 12px;">Kembali</a>
-            </div>
         </div>
     </div>
 
     <!-- Riwayat Tes -->
     <div class="col-lg-8">
-        <div class="neo-card" style="padding: 32px; border-radius: 20px; border: none; height: 100%;">
+        <div style="padding-left: 10px;">
             <div class="mb-4">
                 <h4 style="font-weight: 800; color: var(--text-dark); margin: 0;">Riwayat Diagnosis Stres</h4>
                 <p style="font-size: 14px; color: var(--text-muted); margin: 0; margin-top: 4px;">Hanya menampilkan hasil diagnosis yang diizinkan dibagikan oleh mahasiswa.</p>
@@ -75,7 +79,7 @@
                             <th style="font-size: 12px; color: var(--text-muted); text-transform: uppercase;">Tanggal</th>
                             <th style="font-size: 12px; color: var(--text-muted); text-transform: uppercase;">Tingkat Stres</th>
                             <th style="font-size: 12px; color: var(--text-muted); text-transform: uppercase;">Akurasi (CF)</th>
-                            <th style="font-size: 12px; color: var(--text-muted); text-transform: uppercase; text-align: right;">Detail</th>
+
                         </tr>
                     </thead>
                     <tbody>
@@ -87,12 +91,7 @@
                                         {{ $diagnosis->burnoutLevel->name ?? 'Tidak diketahui' }}
                                     </span>
                                 </td>
-                                <td style="font-weight: 800; color: var(--primary);">{{ $diagnosis->cf_percentage }}%</td>
-                                <td style="text-align: right;">
-                                    <a href="{{ route('diagnosis.result', $diagnosis->id) }}" target="_blank" class="btn btn-sm" style="background: rgba(0, 184, 148, 0.1); color: #00b894; border-radius: 8px;">
-                                        <i class="ph-fill ph-file-text"></i> Lihat Hasil
-                                    </a>
-                                </td>
+                                <td style="font-weight: 800; color: var(--primary);">{{ round($diagnosis->cf_result * 100, 1) }}%</td>
                             </tr>
                         @empty
                             <tr>
@@ -115,6 +114,7 @@
                 </table>
             </div>
         </div>
+    </div>
     </div>
 </div>
 @endsection

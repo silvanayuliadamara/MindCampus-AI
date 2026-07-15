@@ -2,12 +2,11 @@
 @section('title', 'Data Mahasiswa')
 
 @section('content')
-<div class="neo-card mb-4" style="padding: 24px; border-radius: 20px; border: none;">
-    <div class="mb-4">
-        <h3 style="font-weight: 800; color: var(--text-dark); margin: 0;">Data Mahasiswa</h3>
-        <p style="font-size: 14px; color: var(--text-muted); margin: 0; margin-top: 4px;">Pantau data pengguna dan riwayat tes stres mahasiswa.</p>
-    </div>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 style="font-weight: 800; color: var(--text-main, #2b3674); margin: 0; font-size: 24px; letter-spacing: -0.5px;">Data Mahasiswa</h3>
+</div>
 
+<div class="neo-card mb-4" style="padding: 24px; border-radius: 20px; border: none;">
     @if(session('success'))
         <div class="alert alert-success" style="border-radius: 12px; font-weight: 600;">
             {{ session('success') }}

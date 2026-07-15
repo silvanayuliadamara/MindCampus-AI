@@ -39,6 +39,11 @@ Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->name('password
 Route::get('/reset-password', [AuthController::class, 'showResetPassword'])->name('password.reset.form');
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 
+// Shared Routes (Accessible by both Admin and Mahasiswa)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/diagnosis/result/{id}', [DiagnosisController::class, 'result'])->name('diagnosis.result');
+});
+
 // Mahasiswa Routes
 Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
     Route::get('/dashboard', function () {
@@ -59,7 +64,6 @@ Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
     Route::get('/diagnosis', [DiagnosisController::class, 'wizard'])->name('diagnosis.wizard');
     Route::post('/diagnosis', [DiagnosisController::class, 'calculate'])->name('diagnosis.calculate');
     Route::get('/diagnosis/history', [DiagnosisController::class, 'history'])->name('diagnosis.history');
-    Route::get('/diagnosis/result/{id}', [DiagnosisController::class, 'result'])->name('diagnosis.result');
 
     // Article routes
     Route::get('/articles', [ArticleController::class, 'index'])->name('articles.index');
@@ -123,9 +127,23 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
             ['val' => '12', 'label' => 'Desember'],
         ];
 
-        return view('admin.dashboard', compact('totalSymptoms', 'totalStudents', 'totalSharedDiagnoses', 'recentDiagnoses', 'burnoutLevels', 'availableMonths', 'selectedMonth'));
+        // Monthly Trend Data for Chart.js
+        $trendData = array_fill(1, 12, 0);
+        $diagnosesThisYear = \App\Models\Diagnosis::where('is_shared', true)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+            
+        foreach ($diagnosesThisYear as $d) {
+            $m = (int) $d->created_at->format('n');
+            $trendData[$m]++;
+        }
+
+        return view('admin.dashboard', compact('totalSymptoms', 'totalStudents', 'totalSharedDiagnoses', 'recentDiagnoses', 'burnoutLevels', 'availableMonths', 'selectedMonth', 'trendData'));
     })->name('dashboard');
 
     Route::resource('symptoms', \App\Http\Controllers\Admin\SymptomController::class);
     Route::resource('students', \App\Http\Controllers\Admin\StudentController::class)->only(['index', 'show', 'destroy']);
+    
+    Route::get('/profile', [\App\Http\Controllers\Admin\ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [\App\Http\Controllers\Admin\ProfileController::class, 'update'])->name('profile.update');
 });

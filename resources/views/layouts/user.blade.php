@@ -137,11 +137,31 @@
             const toggle = document.getElementById('mobile-toggle');
             const appContainer = document.getElementById('app-container');
             
+            // Sidebar State Management for Desktop
+            const savedUserSidebarState = localStorage.getItem('userSidebarState');
+            if (savedUserSidebarState === 'collapsed' && window.innerWidth > 992) {
+                appContainer.classList.add('sidebar-collapsed');
+            }
+
             toggle.addEventListener('click', function() {
                 if (window.innerWidth <= 992) {
-                    appContainer.classList.toggle('show-sidebar');
+                    if (appContainer.classList.contains('show-sidebar')) {
+                        appContainer.classList.remove('show-sidebar', 'show-icon-only');
+                    } else if (appContainer.classList.contains('show-icon-only')) {
+                        appContainer.classList.remove('show-icon-only');
+                        appContainer.classList.add('show-sidebar');
+                    } else {
+                        appContainer.classList.add('show-icon-only');
+                    }
                 } else {
                     appContainer.classList.toggle('sidebar-collapsed');
+                    
+                    // Save state
+                    if (appContainer.classList.contains('sidebar-collapsed')) {
+                        localStorage.setItem('userSidebarState', 'collapsed');
+                    } else {
+                        localStorage.setItem('userSidebarState', 'full');
+                    }
                 }
             });
 
