@@ -109,15 +109,27 @@
                         <i class="ph-bold ph-moon" id="theme-icon"></i>
                     </button>
                     
-                    <div class="user-profile">
-                        <div class="user-info d-none d-md-flex flex-column text-end" style="justify-content: center; margin-right: 8px;">
-                            <span class="user-name" style="font-size: 14px; font-weight: 700; color: var(--text-dark); line-height: 1.2;">{{ auth()->user()->name ?? 'Pengguna' }}</span>
-                            <span class="user-role" style="font-size: 12px; color: var(--text-secondary); font-weight: 600;">Mahasiswa</span>
+                    <div class="user-profile dropdown">
+                        <div class="d-flex align-items-center" style="cursor: pointer;" data-bs-toggle="dropdown" aria-expanded="false">
+                            <div class="user-info d-none d-md-flex flex-column text-end" style="justify-content: center; margin-right: 8px;">
+                                <span class="user-name" style="font-size: 14px; font-weight: 700; color: var(--text-dark); line-height: 1.2;">{{ auth()->user()->name ?? 'Pengguna' }}</span>
+                                <span class="user-role" style="font-size: 12px; color: var(--text-secondary); font-weight: 600;">Mahasiswa</span>
+                            </div>
+                            <div class="user-avatar" style="display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; width: 40px; height: 40px; border-radius: 12px; background: linear-gradient(135deg, #818cf8, #6366f1); position: relative;">
+                                {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
+                                <span style="position: absolute; bottom: -2px; right: -2px; width: 12px; height: 12px; background-color: #10b981; border: 2px solid var(--sidebar-dark); border-radius: 50%;"></span>
+                            </div>
                         </div>
-                        <div class="user-avatar" style="display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; width: 40px; height: 40px; border-radius: 12px; background: linear-gradient(135deg, #818cf8, #6366f1); position: relative;">
-                            {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
-                            <span style="position: absolute; bottom: -2px; right: -2px; width: 12px; height: 12px; background-color: #10b981; border: 2px solid var(--sidebar-dark); border-radius: 50%;"></span>
-                        </div>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm" style="border-radius: 12px; border: 1px solid rgba(0,0,0,0.05); padding: 8px;">
+                            <li><a class="dropdown-item" href="{{ route('profile.edit') }}" style="border-radius: 8px; font-weight: 500; font-size: 14px; padding: 8px 16px;"><i class="ph-bold ph-user me-2"></i> Profil Saya</a></li>
+                            <li><hr class="dropdown-divider" style="margin: 4px 0; border-color: rgba(0,0,0,0.05);"></li>
+                            <li>
+                                <form action="{{ route('logout') }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item text-danger" style="border-radius: 8px; font-weight: 600; font-size: 14px; padding: 8px 16px;"><i class="ph-bold ph-sign-out me-2"></i> Logout</button>
+                                </form>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </header>

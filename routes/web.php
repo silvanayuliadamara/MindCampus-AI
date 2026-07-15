@@ -2,9 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\DiagnosisController;
-use App\Http\Controllers\ArticleController;
-use App\Http\Controllers\ChatbotController;
+use App\Http\Controllers\User\DiagnosisController;
+use App\Http\Controllers\User\ArticleController;
+use App\Http\Controllers\User\ChatbotController;
+use App\Http\Controllers\User\UserProfileController;
 
 Route::get('/', function () {
     if (auth()->check()) {
@@ -73,6 +74,10 @@ Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
     Route::get('/chatbot', [ChatbotController::class, 'index'])->name('chatbot');
     Route::post('/chatbot/send', [ChatbotController::class, 'sendMessage'])->name('chatbot.send');
     Route::post('/chatbot/clear', [ChatbotController::class, 'clearHistory'])->name('chatbot.clear');
+
+    // Profile routes
+    Route::get('/profile', [UserProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [UserProfileController::class, 'update'])->name('profile.update');
 });
 
 // Admin Routes
@@ -143,6 +148,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
     Route::resource('symptoms', \App\Http\Controllers\Admin\SymptomController::class);
     Route::resource('students', \App\Http\Controllers\Admin\StudentController::class)->only(['index', 'show', 'destroy']);
+    Route::resource('articles', \App\Http\Controllers\Admin\ArticleController::class);
     
     Route::get('/profile', [\App\Http\Controllers\Admin\ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [\App\Http\Controllers\Admin\ProfileController::class, 'update'])->name('profile.update');

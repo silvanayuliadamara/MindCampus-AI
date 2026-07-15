@@ -318,6 +318,11 @@
                 </a>
             </li>
             <li>
+                <a href="{{ route('admin.articles.index') }}" class="{{ request()->routeIs('admin.articles.*') ? 'active' : '' }}">
+                    <i class="ph ph-article"></i> <span>Kelola Artikel</span>
+                </a>
+            </li>
+            <li>
                 <a href="{{ route('admin.students.index') }}" class="{{ request()->routeIs('admin.students.*') ? 'active' : '' }}">
                     <i class="ph ph-users"></i> <span>Data Mahasiswa</span>
                 </a>
